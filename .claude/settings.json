@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.intodesignsystems.com)",
+      "WebFetch(domain:www.figma.com)"
+    ]
+  }
+}
