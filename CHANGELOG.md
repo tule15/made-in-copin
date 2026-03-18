@@ -4,6 +4,29 @@ Format: `[version] YYYY-MM-DD — tóm tắt thay đổi`
 
 ---
 
+## [5.2.1] 2026-03-18
+
+### Changed
+- §4.7 Scrollbars: `--scrollbar-size` giảm từ `6px` → `4px` (default) — ưu tiên data density
+- §4.7 Scrollbars: cho phép flexible lên `6px` với isolated scroll containers (modal, drawer, sidebar)
+
+---
+
+## [5.2.0] 2026-03-18
+
+### Added
+- §7 Phosphor React import snippet + danh sách icon chuẩn Copin (Sort/Filter, Trading, Navigation, Status, Trader/Profile)
+  - Ghi chú tên đúng: `Funnel` (không phải `Filter`), `ArrowsDownUp` cho unsorted state
+- §5 Data Table: `Cell text` — Body Regular 14px · n-1
+- §5 Data Table: `Metric label` (sub-label, unit, tag inside cell) — Caption Regular 12px · uppercase · n-3
+
+### Changed
+- §5 Data Table Header: `Caption Bold uppercase` → `Body Regular 14px · n-2`
+- §5 Section Header title: `Caption Bold · uppercase` → `Body Regular 14px · n-1`
+- §4 Layout example (Trader Explorer): Table Header label cập nhật khớp rule mới
+
+---
+
 ## [5.1.0] 2026-03-16
 
 ### Added

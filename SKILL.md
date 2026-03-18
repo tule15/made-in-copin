@@ -123,6 +123,33 @@ Avatar / Switch / Pill      : 9999px
 --shadow-5: 0 32px 48px rgba(119,126,144,0.10);  /* overlay */
 ```
 
+### 4.7 Scrollbars
+
+> Scrollbars are UI chrome, not content. Keep them thin, low-contrast, and style consistently across Copin.
+
+```
+/* Scrollbar thickness — flexible */
+--scrollbar-size: 4px;          /* default: compact, data-first */
+/* ↑ Can increase to 6px for standalone scroll areas (modals, sidebars, drawers) */
+--scrollbar-radius: 99px;       /* fully rounded thumb */
+
+/* Track */
+--scrollbar-track: rgba(255,255,255,0.00);  /* fully transparent */
+--scrollbar-track-hover: rgba(255,255,255,0.04);
+
+/* Thumb */
+--scrollbar-thumb: rgba(255,255,255,0.15);  /* visible, low contrast */
+--scrollbar-thumb-hover: rgba(78,174,253,0.24); /* primary-2 */
+--scrollbar-thumb-active: rgba(78,174,253,0.40); /* primary-1 */
+```
+
+**Guidelines:**
+- Default `--scrollbar-size: 4px` — prioritizes data density in data-heavy views (tables, charts, trade lists).
+- Widen to `6px` only in isolated scroll containers where discoverability matters more than space (e.g. modal body, settings drawer).
+- Use custom scrollbars for desktop web (WebKit/Pseudo-elements). For native scrollbars (macOS), ensure content doesn’t rely on always-visible rails.
+- Thumb should be subtle (low opacity) at rest, gain contrast on hover/drag.
+- Do not style scrollbars in a way that interferes with content legibility or interaction (no overlapping padding).
+
 ---
 
 ## 5 · LAYOUT RULES
@@ -168,7 +195,7 @@ n-7 (page) → n-6 (panel) → n-5 (hover/active/focused)
 [TOPBAR · n-7 · border-bottom 1px n-4]
 [FILTER BAR · border-bottom 1px n-4]
   Search | Protocol pills | Time tabs | Filter button | Sort
-[TABLE HEADER · n-5 · Caption Bold uppercase · n-2]
+[TABLE HEADER · n-5 · Body Regular 14px · n-2]
 [TABLE ROWS · transparent · hover rgba(78,174,253,0.08)]
   border-bottom: 1px rgba(49,56,86,0.5) per row
 [PAGINATION · border-top 1px n-4 · h:48px · n-7]
@@ -280,7 +307,7 @@ DangerFill → irreversible actions ONLY (requires confirm modal)
 ### Data Table
 
 ```
-Header:     bg n-5 · Caption Bold uppercase · color n-2
+Header:     bg n-5 · Body Regular 14px · color n-2
 Rows:       bg transparent · hover rgba(78,174,253,0.08)
 Active row: bg rgba(78,174,253,0.12) · border-left 2px primary-1
 Divider:    1px solid rgba(49,56,86,0.5) per row
@@ -289,6 +316,8 @@ No striped rows. No border-radius.
 Alignment:  Text/Name → LEFT · Numbers → RIGHT [critical] · Status → center
 Padding:    16px horizontal · 10px vertical · min-height 48px
 Sortable:   [Label n-2] [sort-icon n-3] · active: n-1
+Cell text:  Body Regular 14px · n-1
+Metric label (sub-label, unit, tag inside cell): Caption Regular 12px · uppercase · n-3
 ```
 
 ### Input System
@@ -433,7 +462,7 @@ Switch 28×16px track · 12×12px thumb:
 ### Section Header
 
 ```
-[Icon 16px · n-2] [TITLE · Caption Bold · uppercase · n-1]   [Action → · Caption Bold · primary-1]
+[Icon 16px · n-2] [TITLE · Body Regular 14px · n-1]   [Action → · Caption Bold · primary-1]
 Height: 40px · padding 0 16px · border-bottom 1px n-4 · bg n-6
 Icon: Phosphor 16px · n-2 (not primary, not white)
 ```
@@ -507,6 +536,55 @@ Toast:      bg n-5 · border 1px n-4 · radius 4px · shadow-3 · 3s auto-dismis
 24px  h4+ 28px+          hero stats, topbar brand
 
 Rule: never mix icon and text sizes differing by more than one step.
+```
+
+### Phosphor React — Import & Common Icons
+
+```tsx
+import { IconName } from "@phosphor-icons/react"
+// weight="regular" (default outline) | "fill" | "bold" | "duotone"
+
+// Sort & Filter
+ArrowsDownUp      // sortable column — unsorted state
+ArrowUp           // sort ascending
+ArrowDown         // sort descending
+Funnel            // filter (NOT "Filter" — wrong name)
+FunnelSimple      // filter badge/active indicator
+
+// Navigation & Actions
+CaretDown  CaretUp  CaretRight  CaretLeft   // dropdowns, accordion
+ArrowLeft  ArrowRight                        // back/forward
+ArrowSquareOut                               // external link
+DotsThreeVertical  DotsThree                // more options menu
+X                                           // close / clear input
+
+// Data & Trading
+ChartLine         // performance chart
+ChartBar          // volume / bar chart
+TrendUp  TrendDown // trend direction (use green-1 / red-1)
+ArrowCircleUp  ArrowCircleDown              // long / short signal
+Swap                                        // swap / trade action
+Lightning                                   // fast copy / instant
+
+// Wallet & Identity
+Wallet            // wallet balance
+Copy              // copy address
+Eye  EyeSlash     // show/hide value
+Star              // watchlist / favorite
+
+// Status & Feedback
+CheckCircle       // success
+Warning           // caution (orange)
+WarningCircle     // error / loss alert (red-1)
+Info              // tooltip trigger
+Bell              // notification
+Gear              // settings
+MagnifyingGlass   // search input
+
+// Trader / Profile
+Trophy            // leaderboard / ranking
+Users             // copy trader count
+UserCircle        // trader avatar fallback
 ```
 
 ---
