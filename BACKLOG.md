@@ -23,6 +23,8 @@
 |---|------|--------|
 | B-06 | Data Table header: Body Regular 14px · n-2 | ✅ Done v5.2.0 |
 | B-07 | Scrollbar: 4px default, 6px for modal/drawer | ✅ Done v5.2.1 |
+| B-08 | Figma-first workflow: STEP 0 trong /design command | ✅ Done 2026-03-19 |
+| B-09 | Style binding rule: bind text/color to declared Figma styles, fallback #hex | ✅ Done 2026-03-19 |
 
 ---
 

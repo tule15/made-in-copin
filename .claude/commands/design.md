@@ -4,6 +4,64 @@ The user's request: $ARGUMENTS
 
 ---
 
+## STEP 0 — FIGMA-FIRST WORKFLOW (when target = Figma)
+
+If the request is to design directly **into Figma** (not generate code), execute this workflow BEFORE doing anything else:
+
+### 0.1 — Discover available components
+```
+figma_search_components()
+→ List all available components in the file
+→ Note: component names, nodeIds (session-specific), variants
+```
+
+### 0.2 — Read component properties
+```
+For each relevant component identified in 0.1:
+  figma_get_component_details(nodeId)
+  → Read declared properties: variants, boolean toggles, text overrides
+  → Understand the component API before instantiating
+```
+
+### 0.3 — Scan existing references for DNA
+```
+Search-first, don't list everything:
+
+  figma_search_components(query)
+  → Query with keywords from the task (e.g. "trader", "table", "modal", "nav")
+  → Returns matching frames/components with nodeIds — no full page scan needed
+
+  figma_get_screenshot(nodeId) on 1–2 most relevant hits
+  → Pick frames whose name closely matches what you're designing
+  → If a component library frame is returned, always prefer it as reference
+
+Goal: find a visual anchor in THIS file that matches the task,
+      then apply that spacing / density / layout — not from memory.
+```
+
+### 0.4 — Design using discovered components + declared styles
+```
+Priority order:
+  1. Instantiate existing Figma components (figma_instantiate_component)
+     with the exact properties read in step 0.2
+  2. If a component doesn't exist in the library, build it from scratch
+     following SKILL.md specs — but prefer reuse over creation
+  3. Apply visual DNA from reference screenshots in step 0.3
+
+Style binding rules (ALWAYS apply when designing in Figma):
+  → figma_get_styles() first — read all declared text/color/effect styles
+  → Text: bind to declared text styles (e.g. "Body/Regular", "Caption/Bold")
+           NEVER set font size/weight manually if a matching style exists
+  → Color: bind to declared color styles (e.g. "n-1", "primary-1", "green-1")
+           NEVER use raw fill color if a matching style exists
+  → Exception: if no matching style exists for the value needed,
+               use raw #hex — and note it as a candidate for a new style
+```
+
+> Skip STEP 0 entirely when generating React/TypeScript code — code follows SKILL.md tokens directly.
+
+---
+
 ## STEP 1 — ANALYZE THE REQUEST
 
 Before writing any code, silently work through:
