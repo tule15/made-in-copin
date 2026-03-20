@@ -4,6 +4,69 @@ Format: `[version] YYYY-MM-DD — tóm tắt thay đổi`
 
 ---
 
+## [5.3.0] 2026-03-20
+
+### Added
+- **§10 Component Decision Guide** — 6 decision tables giải quyết nhầm lẫn phổ biến nhất:
+  - 10.1 Input System: InputField vs InputInline vs EditInput vs GroupInput vs Search
+  - 10.2 Button Hierarchy: 19 variants với context rule + hierarchy diagram
+  - 10.3 Selection Controls: Checkbox/Radio/Switch/SwitchInput/Dropdown/Tab Minimal
+  - 10.4 Overlay: Modal vs Drawer vs Tooltip vs Toast — từng scenario cụ thể
+  - 10.5 Disclosure: Tab Large/Small/Minimal vs Dropdown vs Accordion
+  - 10.6 Feedback: Error/Success/Warning/Info — đúng component đúng timing
+- **`resources/ux-patterns.md`** — 10 composition patterns + 4 interaction flows:
+  - Pattern 1–10: Filter Bar, Data Table Row, Form Panel, Settings Panel, Stat Card, Action Row, Modal Confirm Destructive, Mobile Filter Drawer, Empty States (3 variants), Loading States
+  - Flow A–D: Copy Trade Setup, Filter+Sort Table, Edit Settings Value, Confirm Destructive
+- **`design.md` STEP 0.2** — Storybook verification bắt buộc trước khi ra quyết định variant/state
+- **`design.md` STEP 0** — Đánh số lại 0.1–0.6, làm rõ thứ tự không được bỏ qua
+- **WORKFLOW section** trong SKILL.md — tóm tắt 6 bước Figma + 2 bước Code cho mọi người dùng repo
+
+### Changed
+- `design.md` REFERENCES: bổ sung Storybook URL, ux-patterns.md, FIGMA WORKFLOW SUMMARY block
+- §6 Tab: thêm state đầy đủ (Default n-3 / Hover n-2 / Active n-1+underline) + overflow behavior
+- §6 Dropdown: thêm state matrix đầy đủ (Closed/Open/Item hover/Selected/Disabled)
+- SKILL.md REFERENCES → tách thành WORKFLOW Figma + WORKFLOW Code + REFERENCES
+
+---
+
+## [5.2.3] 2026-03-20
+
+### Added
+- §6 SwitchInput (labeled switch row): layout, loading state, when-to-use vs bare Switch
+- §6 CustomTag: anatomy, preset colors, dot variant, tooltip behavior
+- §6 ActiveDot: sizes, color semantics, placement rules (Avatar overlay + inline)
+
+---
+
+## [5.2.2] 2026-03-20 — Storybook Sync
+
+### Fixed (token values sai so với `colors.ts` thực tế)
+- `--n-1`: `#FCFCFD` → `#EAE5E3` (warm off-white — actual `neutral1` dark mode)
+- `--red-1`: `#FA5547` → `#FA7B70` (lighter, hover variant — align với code `red1`)
+- `--red-2`: `#FA7B70` → `#FA5547` (main loss/danger color — align với code `red2`)
+- Button radius: `4px` → `2px` (source: `theme.ts → button: '2px'`)
+- Cascade fix: tất cả semantic references tới loss/danger/error đổi từ `red-1` → `red-2`
+  (text-loss, badge SHORT, alert ERROR, input errors, progress bar, chart, sparkline, distribution bar, MDD stats, icon comments)
+
+### Added
+- `--primary-3: #2F9EEE` (pressed/active state)
+- `--violet: #C286F0` (special tags, protocol highlights — không dùng cho semantic state)
+- §6 DecoratedText (Signed Numbers): format số tài chính +/-, 3 variants, icon pairing
+- §6 Drawer: Right/Left/Bottom placements, sizes, header/body/footer, animation
+- §6 Divider: horizontal, dashed, custom color
+- §6 NoDataFound: 3 variants (no results / first time / error)
+- R13: Loss/danger color = red-2 (#FA5547) · red-1 (#FA7B70) = hover only
+- R14: Button radius = 2px (NOT 4px) · Badge/Tag/Dropdown = 4px
+- Typography: `head` token — 20px / 700 / 28px line-height
+- Button variants: +11 variants (WHITE, INFO, SUCCESS, WARNING, TEXT, TEXT_PRIMARY, GHOST_WARNING, GHOST_SUCCESS, GHOST_ACTIVE, GHOST_INACTIVE, OUTLINE_ACTIVE, OUTLINE_INACTIVE)
+
+### Confirmed unchanged (verified against source)
+- Green: `#38D060 / #6DD488 / #2B9948` ✓
+- Orange: `#FFC24B / #FCEFD1 / #CB8D14` ✓
+- Primary: `#4EAEFD / #97CFFD` ✓
+
+---
+
 ## [5.2.1] 2026-03-18
 
 ### Changed

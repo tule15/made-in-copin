@@ -6,56 +6,87 @@ The user's request: $ARGUMENTS
 
 ## STEP 0 — FIGMA-FIRST WORKFLOW (when target = Figma)
 
-If the request is to design directly **into Figma** (not generate code), execute this workflow BEFORE doing anything else:
+If the request is to design directly **into Figma** (not generate code), execute this workflow IN ORDER before doing anything else. Do NOT skip or reorder steps.
 
-### 0.1 — Discover available components
+### 0.1 — Consult Decision Guide (SKILL.md §10)
+```
+Before touching Figma or Storybook, answer:
+
+  □ Which components are needed? → SKILL.md §10 Decision Guide
+  □ Which variant of each? → tables 10.1–10.6
+  □ Is this a known pattern? → resources/ux-patterns.md
+
+Output: component list + variant per component
+Example: "Button Normal MD, InputField MD, Dropdown Trigger 3, Tab Small"
+```
+
+### 0.2 — Verify on Storybook (https://copin-storybook.netlify.app/)
+```
+For each component decided in 0.1:
+  → Find the component in Storybook sidebar
+  → Check ALL story variants (Default, All Variants, Sizes, States...)
+  → Note exact prop names: variant="PRIMARY", size="SM", type="danger"
+  → Observe ALL interaction states: Default / Hover / Focus / Error / Disabled / Loading
+  → Screenshot mentally: what does this component look like EXACTLY before building it
+
+Why: Storybook = ground truth for WHAT it looks like.
+     SKILL.md §10 = ground truth for WHEN to use it.
+     Never guess — always verify on Storybook first.
+
+If Storybook doesn't have the component → use SKILL.md spec directly.
+```
+
+### 0.3 — Discover Figma library components
 ```
 figma_search_components()
-→ List all available components in the file
-→ Note: component names, nodeIds (session-specific), variants
+→ List all components in the Figma file
+→ Note: names, nodeIds (session-specific — never reuse from previous sessions)
+
+figma_search_components(query)
+→ Search with task keywords: "button", "input", "tab", "modal", "navbar"
+→ Match Storybook variant names to Figma component names
 ```
 
-### 0.2 — Read component properties
+### 0.4 — Read Figma component properties
 ```
-For each relevant component identified in 0.1:
+For each component found in 0.3:
   figma_get_component_details(nodeId)
-  → Read declared properties: variants, boolean toggles, text overrides
-  → Understand the component API before instantiating
+  → Read declared properties: variant enum, boolean toggles, text overrides
+  → Map to the exact variant confirmed in Storybook (step 0.2)
+  → If property names differ: use Figma's actual property names, not Storybook's
 ```
 
-### 0.3 — Scan existing references for DNA
+### 0.5 — Scan reference screens for visual DNA
 ```
-Search-first, don't list everything:
+figma_search_components(query)
+→ Search for existing screens matching the task context
+→ e.g. "explorer", "trader profile", "backtesting", "modal"
 
-  figma_search_components(query)
-  → Query with keywords from the task (e.g. "trader", "table", "modal", "nav")
-  → Returns matching frames/components with nodeIds — no full page scan needed
+figma_get_screenshot(nodeId) on 1–2 most relevant screens
+→ Extract: spacing density, panel layout, actual component sizing in context
+→ This is the visual anchor — replicate spacing from this, not from memory
 
-  figma_get_screenshot(nodeId) on 1–2 most relevant hits
-  → Pick frames whose name closely matches what you're designing
-  → If a component library frame is returned, always prefer it as reference
-
-Goal: find a visual anchor in THIS file that matches the task,
-      then apply that spacing / density / layout — not from memory.
+Goal: verify your plan against something that already ships in production.
 ```
 
-### 0.4 — Design using discovered components + declared styles
+### 0.6 — Design: reuse first, build second
 ```
+RULE: Always instantiate existing Figma components. Never draw manually
+      what already exists as a component in the library.
+
 Priority order:
-  1. Instantiate existing Figma components (figma_instantiate_component)
-     with the exact properties read in step 0.2
-  2. If a component doesn't exist in the library, build it from scratch
-     following SKILL.md specs — but prefer reuse over creation
-  3. Apply visual DNA from reference screenshots in step 0.3
+  1. figma_instantiate_component(nodeId) with exact properties from step 0.4
+     → Set variant, size, state to match the Storybook-verified spec
+  2. Only if no matching component exists → build from scratch per SKILL.md
+  3. Apply layout DNA from reference screenshots (step 0.5)
 
-Style binding rules (ALWAYS apply when designing in Figma):
-  → figma_get_styles() first — read all declared text/color/effect styles
-  → Text: bind to declared text styles (e.g. "Body/Regular", "Caption/Bold")
-           NEVER set font size/weight manually if a matching style exists
-  → Color: bind to declared color styles (e.g. "n-1", "primary-1", "green-1")
-           NEVER use raw fill color if a matching style exists
-  → Exception: if no matching style exists for the value needed,
-               use raw #hex — and note it as a candidate for a new style
+Style binding (ALWAYS):
+  figma_get_styles() → read all declared text/color/effect styles
+  → Text: bind to declared text styles ("Body/Regular", "Caption/Bold")
+           NEVER set font manually if matching style exists
+  → Color: bind to color styles ("n-1", "primary-1", "green-1")
+           NEVER raw fill if matching style exists
+  → Exception: no matching style → use raw hex · flag as new style candidate
 ```
 
 > Skip STEP 0 entirely when generating React/TypeScript code — code follows SKILL.md tokens directly.
@@ -165,6 +196,23 @@ After generating, run this checklist. Fix any failures before responding.
 
 ## REFERENCES
 
-- Design tokens, spacing, components → SKILL.md (auto-loaded)
-- Figma source → resources/figma-sources.md
-- Token constants boilerplate → src/theme/tokens.ts
+```
+Decision Guide     : SKILL.md §10               ← WHEN to use which component
+Storybook          : https://copin-storybook.netlify.app  ← WHAT it looks like + all states
+UX Patterns        : resources/ux-patterns.md   ← HOW to compose for common screens
+Design tokens      : SKILL.md §4–§8 (auto-loaded)
+Figma sources      : resources/figma-sources.md
+Token boilerplate  : src/theme/tokens.ts
+Principles         : resources/design-context.md
+```
+
+## FIGMA WORKFLOW SUMMARY
+
+```
+0.1 Decide components  → SKILL.md §10 Decision Guide + ux-patterns.md
+0.2 Verify visuals     → Storybook (variant names, states, exact look)
+0.3 Find in Figma      → figma_search_components()
+0.4 Read properties    → figma_get_component_details()
+0.5 Find reference     → figma_get_screenshot() on similar screens
+0.6 Build             → instantiate components first · bind styles · never draw manually
+```
