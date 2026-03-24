@@ -4,6 +4,29 @@ The user's request: $ARGUMENTS
 
 ---
 
+## MEMORY CONTEXT (Auto-load at session start)
+
+Before doing anything else, silently load design feedback from memory:
+
+```
+1. MEMORY.md is already in context — scan for feedback_* entries
+2. Proactively read these files if they exist:
+   - memory/feedback_skill_content.md       ← rules about SKILL.md + design decisions
+   - memory/feedback_figma_design_workflow.md ← Figma-specific workflow corrections
+   - Any other memory/feedback_design_*.md files
+
+3. Apply loaded rules IMMEDIATELY — do not wait for user to repeat corrections
+   from previous sessions.
+
+4. Track ALL corrections and validations during this session in a mental log:
+   [SESSION LOG]
+   - Corrections: []
+   - Validations: []
+   - New rules: []
+```
+
+---
+
 ## STEP 0 — FIGMA-FIRST WORKFLOW (when target = Figma)
 
 If the request is to design directly **into Figma** (not generate code), execute this workflow IN ORDER before doing anything else. Do NOT skip or reorder steps.
@@ -216,3 +239,73 @@ Principles         : resources/design-context.md
 0.5 Find reference     → figma_get_screenshot() on similar screens
 0.6 Build             → instantiate components first · bind styles · never draw manually
 ```
+
+---
+
+## STEP 6 — LEARN & REMEMBER
+
+Run this step at the end of every design session where corrections or validations occurred.
+
+### 6.1 — Detect learnings during the session
+
+Track these signals in real-time:
+
+| Signal | Examples | Action |
+|--------|----------|--------|
+| **Correction** | "no, use X", "that's wrong", "don't do Y" | Add to SESSION LOG: Corrections |
+| **Validation** | "yes exactly", "perfect", "keep doing that" | Add to SESSION LOG: Validations (if non-obvious) |
+| **New rule** | user reveals a design rule not in SKILL.md | Add to SESSION LOG: New rules |
+| **Product context** | user explains why, deadline, feature goal | Save as `project_*` memory immediately |
+| **Explicit "remember"** | "remember that X" | Save to memory immediately |
+
+### 6.2 — Classify each learning
+
+```
+feedback_design_*  → design rule (visual spec, component usage, layout pattern)
+feedback_workflow_* → how to work in this project (process, tool usage)
+project_*          → product context (feature goals, constraints, decisions)
+```
+
+### 6.3 — Save after session
+
+When the design task is done, if SESSION LOG is non-empty:
+
+```
+1. Summarize briefly: "Session này tôi ghi nhận N corrections / M new rules."
+2. Ask: "Lưu vào memory để dùng cho các sessions sau không?" (default: yes)
+3. If yes → for each item in SESSION LOG:
+   a. Check MEMORY.md — does a related memory file already exist?
+      → Yes: update the existing file (do not create duplicate)
+      → No: create new file at memory/feedback_design_[topic].md
+   b. Use memory format:
+      ---
+      name: [descriptive name]
+      description: [one-line, used for relevance matching]
+      type: feedback
+      ---
+      [Rule/correction stated directly]
+      **Why:** [user's reason or implied reason]
+      **How to apply:** [when/where this kicks in]
+   c. Update MEMORY.md index with a pointer to the new/updated file
+4. Flag SKILL.md candidates separately:
+   "Correction này có thể cần update SKILL.md §[X] — bạn có muốn update không?"
+```
+
+### 6.4 — SKILL.md gap detection
+
+If a correction reveals a missing or wrong spec in SKILL.md:
+
+```
+□ What section is affected? (§4 tokens / §6 components / §7 patterns / §10 decision guide)
+□ Is this a one-off edge case or a general rule?
+   → Edge case: save to memory only
+   → General rule: propose SKILL.md update + save to memory
+□ If proposing SKILL.md update, show the exact diff before applying
+```
+
+### 6.5 — Quick save shortcut
+
+If user says **"nhớ cái này"** or **"remember this"** at any point during the session:
+→ Save immediately to the most appropriate memory file
+→ Confirm: "Đã lưu vào memory/[filename].md"
+→ Do not wait for end of session
